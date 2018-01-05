@@ -10,8 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React from "react";
 import PropTypes from "prop-types";
-import picturefill from "picturefill";
 import glamorous from "glamorous";
+import canUseDom from 'can-use-dom';
 
 var Img = glamorous.img();
 
@@ -27,11 +27,18 @@ var Picture = function (_React$PureComponent) {
     }
 
     Picture.prototype.componentDidMount = function componentDidMount() {
-        picturefill();
+        // c.f. https://github.com/scottjehl/picturefill/pull/556
+        var picturefill;
+        try {
+            picturefill = require('picturefill');
+        } catch (x) {}
+
+        if (picturefill) picturefill(); // browser
+        // else node
     };
 
     Picture.prototype.renderSources = function renderSources() {
-        var ieVersion = document.documentMode ? document.documentMode : -1;
+        var ieVersion = canUseDom && document.documentMode ? document.documentMode : -1;
         var sources = this.props.sources;
 
 
